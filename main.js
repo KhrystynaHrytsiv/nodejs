@@ -21,4 +21,4 @@ try{
     rl.close()
 }
 }
- reduceEmails()
+void reduceEmails()
