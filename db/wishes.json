@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "title": "travel",
+    "description": "To Tenerife",
+    "price": "1200$"
+  },
+  {
+    "id": 2,
+    "title": "surfing",
+    "description": "try to surf on Madeira",
+    "price": "1400$"
+  }
+]
