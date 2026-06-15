@@ -18,5 +18,16 @@ class UserController {
         const data = await userService.getById(id);
         res.status(StatusCodes.OK).json(data)
     }
+    public async update(req:Request, res:Response){
+        const id = req.params.id as string;
+        const user = req.body;
+        const data = await userService.update(id, user);
+        res.status(StatusCodes.OK).json(data)
+    }
+    public async delete (req:Request, res:Response){
+        const id = req.params.id as string;
+        await userService.delete(id)
+        res.status(StatusCodes.NO_CONTENT).end()
+    }
 }
 export const userController = new UserController();
