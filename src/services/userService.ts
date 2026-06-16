@@ -8,21 +8,30 @@ class UserService{
     public create (user:IUserDTO): Promise<IUser>{
         return userRepository.create(user)
     }
-    public getById(userId:string):Promise<IUser | null>{
-        return userRepository.getById(userId)
-    }
-    // public async getById(userId: string): Promise<IUser> {
-    //     const user = await userRepository.getById(userId);
-    //     if (!user) {
-    //         throw new Error('User not found');
-    //     }
-    //     return user;
+    // public getById(userId:string):Promise<IUser | null>{
+    //     return userRepository.getById(userId)
     // }
+    public async getById(userId: string): Promise<IUser> {
+        const user = await userRepository.getById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    }
     public update (id:string, user:IUserDTO):Promise<IUser | null>{
-        return userRepository.update(id, user)
+        const updatedUser = userRepository.update(id, user);
+        if (!updatedUser) {
+            throw new Error('User not found');
+        }
+        return updatedUser;
+
     }
     public delete(userId:string):Promise<IUser | null>{
-        return userRepository.delete(userId)
+         const user = userRepository.delete(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
     }
 }
 export const userService = new UserService();
