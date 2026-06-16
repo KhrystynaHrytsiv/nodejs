@@ -1,12 +1,12 @@
-import {IUser, IUserDTO} from "../interfaces/IUser";
-import {userRepository} from "../repositories/user.repository";
+import { IUser, IUserDTO } from "../interfaces/IUser";
+import { userRepository } from "../repositories/user.repository";
 
-class UserService{
-    public getAll():Promise<IUser[]>{
-        return userRepository.getAll()
+class UserService {
+    public getAll(): Promise<IUser[]> {
+        return userRepository.getAll();
     }
-    public create (user:IUserDTO): Promise<IUser>{
-        return userRepository.create(user)
+    public create(user: IUserDTO): Promise<IUser> {
+        return userRepository.create(user);
     }
     // public getById(userId:string):Promise<IUser | null>{
     //     return userRepository.getById(userId)
@@ -14,22 +14,21 @@ class UserService{
     public async getById(userId: string): Promise<IUser> {
         const user = await userRepository.getById(userId);
         if (!user) {
-            throw new Error('User not found');
+            throw new Error("User not found");
         }
         return user;
     }
-    public update (id:string, user:IUserDTO):Promise<IUser | null>{
+    public update(id: string, user: IUserDTO): Promise<IUser | null> {
         const updatedUser = userRepository.update(id, user);
         if (!updatedUser) {
-            throw new Error('User not found');
+            throw new Error("User not found");
         }
         return updatedUser;
-
     }
-    public delete(userId:string):Promise<IUser | null>{
-         const user = userRepository.delete(userId);
+    public delete(userId: string): Promise<IUser | null> {
+        const user = userRepository.delete(userId);
         if (!user) {
-            throw new Error('User not found');
+            throw new Error("User not found");
         }
         return user;
     }
