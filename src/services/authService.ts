@@ -1,5 +1,6 @@
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
+import { ISignInDTO } from "../interfaces/ISignInDTO";
 import { TokenPair } from "../interfaces/IToken";
 import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { tokenRepository } from "../repositories/tokenRepository";
@@ -24,19 +25,21 @@ class AuthService {
         return { user: newUser, tokens };
     }
 
-    public async signIn(dto: any): Promise<{ user: IUser; tokens: TokenPair }> {
-        const user = await userRepository.getByEmail(dto.email);
+    public async signIn(
+        dto: ISignInDTO,
+    ): Promise<{ user: IUser; tokens: TokenPair }> {
+        const user = await userRepository.getByEmail(dto.email); //пошук користувача за емейлом
         if (!user) {
             throw new apiErrors(
                 "Email or password invalid",
                 StatusCodes.UNAUTHORIZED,
             );
-        }
+        } //перевірка наявності користувача в дб
 
-        const isValidPassword = passwordService.comparePassword(
+        const isValidPassword = await passwordService.comparePassword(
             dto.password,
             user.password,
-        );
+        ); // перевірка відповідності введеного пароля хешу, що зберігається в БД
         if (!isValidPassword) {
             throw new apiErrors(
                 "Invalid email or password",
@@ -46,8 +49,8 @@ class AuthService {
         const tokens = tokenService.generateTokens({
             userId: user._id,
             role: user.role,
-        });
-        await tokenRepository.create({ ...tokens, _userId: user._id });
+        }); // генерація токенів
+        await tokenRepository.create({ ...tokens, _userId: user._id }); // збереження токенів для користувача в базі даних
         return { user, tokens };
     }
 }
