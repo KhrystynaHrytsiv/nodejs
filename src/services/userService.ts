@@ -1,36 +1,47 @@
-import { IUser, IUserDTO } from "../interfaces/IUser";
+import { StatusCodes } from "../enums/statusCodes";
+import { apiErrors } from "../errors/apiErrors";
+import { IUser, IUserCreateDTO, IUserUpdateDTO } from "../interfaces/IUser";
 import { userRepository } from "../repositories/user.repository";
 
 class UserService {
     public getAll(): Promise<IUser[]> {
         return userRepository.getAll();
     }
-    public create(user: IUserDTO): Promise<IUser> {
+    public create(user: IUserCreateDTO): Promise<IUser> {
         return userRepository.create(user);
     }
-    // public getById(userId:string):Promise<IUser | null>{
-    //     return userRepository.getById(userId)
-    // }
     public async getById(userId: string): Promise<IUser> {
         const user = await userRepository.getById(userId);
         if (!user) {
-            throw new Error("User not found");
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
         }
         return user;
     }
-    public update(id: string, user: IUserDTO): Promise<IUser | null> {
-        const updatedUser = userRepository.update(id, user);
-        if (!updatedUser) {
-            throw new Error("User not found");
+    public async update(
+        id: string,
+        user: IUserUpdateDTO,
+    ): Promise<IUser | null> {
+        const data = await userRepository.getById(id);
+        if (!data) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
         }
-        return updatedUser;
+        return await userRepository.update(id, user);
     }
-    public delete(userId: string): Promise<IUser | null> {
-        const user = userRepository.delete(userId);
-        if (!user) {
-            throw new Error("User not found");
+    public async delete(userId: string): Promise<void> {
+        const data = await userRepository.getById(userId);
+        if (!data) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
         }
-        return user;
+        await userRepository.delete(userId);
+    }
+    public async isEmailUniq(email: string): Promise<void> {
+        const user = await userRepository.getByEmail(email);
+        if (user) {
+            throw new apiErrors(
+                "user is already exists",
+                StatusCodes.BAD_REQUEST,
+            );
+        }
     }
 }
 export const userService = new UserService();

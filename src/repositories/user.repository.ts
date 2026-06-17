@@ -1,4 +1,4 @@
-import { IUser, IUserDTO } from "../interfaces/IUser";
+import { IUser, IUserCreateDTO, IUserUpdateDTO } from "../interfaces/IUser";
 import { User } from "../models/user.modules";
 
 class UserRepository {
@@ -6,18 +6,21 @@ class UserRepository {
         return User.find();
     }
 
-    public create(user: IUserDTO): Promise<IUser> {
+    public create(user: IUserCreateDTO): Promise<IUser> {
         return User.create(user);
     }
 
     public getById(userId: string): Promise<IUser | null> {
         return User.findById(userId);
     }
-    public update(id: string, user: IUserDTO): Promise<IUser | null> {
+    public update(id: string, user: IUserUpdateDTO): Promise<IUser | null> {
         return User.findByIdAndUpdate(id, user, { returnDocument: "after" });
     }
     public delete(userId: string): Promise<IUser | null> {
         return User.findByIdAndDelete(userId);
+    }
+    public getByEmail(email: string): Promise<IUser | null> {
+        return User.findOne({ email });
     }
 }
 export const userRepository = new UserRepository();
