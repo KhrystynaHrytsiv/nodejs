@@ -12,14 +12,14 @@ class AuthMiddleware {
         next: NextFunction,
     ) {
         try {
-            const authorizationHeader = req.headers.authorization;
+            const authorizationHeader = req.headers.authorization; //отримую токер з хедера
             if (!authorizationHeader) {
                 throw new apiErrors(
                     "No token provided",
                     StatusCodes.UNAUTHORIZED,
                 );
             }
-            const accessToken = authorizationHeader.split(" ")[1];
+            const accessToken = authorizationHeader.split(" ")[1]; //забираю самк значення токена
             if (!accessToken) {
                 throw new apiErrors(
                     "No token provided",
@@ -29,15 +29,15 @@ class AuthMiddleware {
             const tokenPayload = tokenService.verifyToken(
                 accessToken,
                 "access",
-            );
+            ); //перевірка коректності  токена
             const isTokenExist = await tokenService.isTokenExist(
                 accessToken,
                 "accessToken",
-            );
+            ); // чи існує токен в дб
             if (!isTokenExist) {
                 throw new apiErrors("Invalid token", StatusCodes.UNAUTHORIZED);
             }
-            req.res!.locals.tokenPayload = tokenPayload;
+            req.res!.locals.tokenPayload = tokenPayload; //зберегти дані користувача в пейлоуд
             // res.locals.tokenPayload = tokenPayload; //це те саме що і рядок вище
             next();
         } catch (e) {
