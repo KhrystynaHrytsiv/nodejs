@@ -1,6 +1,6 @@
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
-import { ISignInDTO } from "../interfaces/ISignInDTO";
+import { IAuth } from "../interfaces/IAuth";
 import { TokenPair } from "../interfaces/IToken";
 import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { tokenRepository } from "../repositories/tokenRepository";
@@ -26,7 +26,7 @@ class AuthService {
     }
 
     public async signIn(
-        dto: ISignInDTO,
+        dto: IAuth,
     ): Promise<{ user: IUser; tokens: TokenPair }> {
         const user = await userRepository.getByEmail(dto.email); //пошук користувача за емейлом
         if (!user) {

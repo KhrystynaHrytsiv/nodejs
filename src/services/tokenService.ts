@@ -4,6 +4,7 @@ import { config } from "../configs/config";
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
 import { ITokenPayload, TokenPair } from "../interfaces/IToken";
+import { tokenRepository } from "../repositories/tokenRepository";
 
 class TokenService {
     public generateTokens(payload: ITokenPayload): TokenPair {
@@ -39,6 +40,13 @@ class TokenService {
         } catch (e) {
             throw new apiErrors("Invalid token", StatusCodes.UNAUTHORIZED);
         }
+    }
+    public async isTokenExist(
+        token: string,
+        type: "accessToken" | "refreshToken",
+    ): Promise<boolean> {
+        const iToken = await tokenRepository.findByParams({ [type]: token });
+        return !!iToken;
     }
 }
 export const tokenService = new TokenService();
