@@ -22,5 +22,19 @@ class UserRepository {
     public getByEmail(email: string): Promise<IUser | null> {
         return User.findOne({ email });
     }
+    public blockUser(userId: string): Promise<IUser | null> {
+        return User.findByIdAndUpdate(
+            userId,
+            { isActive: false },
+            { returnDocument: "after" },
+        );
+    }
+    public unBlockUser(userId: string): Promise<IUser | null> {
+        return User.findByIdAndUpdate(
+            userId,
+            { isActive: true },
+            { returnDocument: "after" },
+        );
+    }
 }
 export const userRepository = new UserRepository();

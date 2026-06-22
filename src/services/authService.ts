@@ -40,6 +40,9 @@ class AuthService {
             dto.password,
             user.password,
         ); // перевірка відповідності введеного пароля хешу, що зберігається в БД
+        if (!user.isActive) {
+            throw new apiErrors("Account is not active", StatusCodes.FORBIDDEN);
+        }
         if (!isValidPassword) {
             throw new apiErrors(
                 "Invalid email or password",

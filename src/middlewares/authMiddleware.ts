@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
-import { IRefresh } from "../interfaces/IToken";
+import { IRefresh, ITokenPayload } from "../interfaces/IToken";
 import { tokenService } from "../services/tokenService";
+import { userService } from "../services/userService";
 
 class AuthMiddleware {
     public async checkAccessToken(
@@ -37,6 +38,14 @@ class AuthMiddleware {
             if (!isTokenExist) {
                 throw new apiErrors("Invalid token", StatusCodes.UNAUTHORIZED);
             }
+            const isActive = await userService.isActive(tokenPayload.userId);
+            if (!isActive) {
+                throw new apiErrors(
+                    "Account is not active",
+                    StatusCodes.FORBIDDEN,
+                );
+            }
+
             req.res!.locals.tokenPayload = tokenPayload; //зберегти дані користувача в пейлоуд
             // res.locals.tokenPayload = tokenPayload; //це те саме що і рядок вище
             next();
@@ -71,6 +80,17 @@ class AuthMiddleware {
             }
             req.res!.locals.tokenPayload = tokenPayload;
             // res.locals.tokenPayload = tokenPayload; //це те саме що і рядок вище
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
+    public isAdmin(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { role } = res.locals.tokenPayload as ITokenPayload;
+            if (role !== "admin") {
+                throw new apiErrors("No has permission", StatusCodes.FORBIDDEN);
+            }
             next();
         } catch (e) {
             next(e);

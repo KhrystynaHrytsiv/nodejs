@@ -43,5 +43,24 @@ class UserService {
             );
         }
     }
+    public async isActive(id: string): Promise<boolean> {
+        const user = await this.getById(id);
+        return user.isActive;
+    }
+    public async blockUser(id: string): Promise<IUser> {
+        const user = await userRepository.blockUser(id);
+        if (!user) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
+        }
+        return user;
+    }
+    public async unBlockUser(id: string): Promise<IUser> {
+        const user = await userRepository.unBlockUser(id);
+        if (!user) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
+        }
+        return user;
+    }
 }
+
 export const userService = new UserService();
