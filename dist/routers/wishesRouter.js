@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.wishesRouter = void 0;
+const express_1 = require("express");
+const wishController_1 = require("../controllers/wishController");
+const commonMiddleware_1 = require("../middlewares/commonMiddleware");
+const wishValidator_1 = require("../validation/wishValidator");
+exports.wishesRouter = (0, express_1.Router)();
+exports.wishesRouter.get('/', wishController_1.wishController.getAll);
+exports.wishesRouter.get('/:id', commonMiddleware_1.middleware.isIdValid('id'), wishController_1.wishController.getById);
+exports.wishesRouter.post('/', commonMiddleware_1.middleware.validateBody(wishValidator_1.WishValidator.create), wishController_1.wishController.create);
+exports.wishesRouter.put('/:id', commonMiddleware_1.middleware.isIdValid('id'), commonMiddleware_1.middleware.validateBody(wishValidator_1.WishValidator.update), wishController_1.wishController.update);
+exports.wishesRouter.delete('/:id', commonMiddleware_1.middleware.isIdValid('id'), wishController_1.wishController.delete);
