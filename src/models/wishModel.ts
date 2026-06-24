@@ -11,4 +11,5 @@ const  wishSchema = new Schema({
     { timestamps: true, versionKey: false}
 );
 
+
 export const wishModel = model<IWish>("wish",wishSchema)

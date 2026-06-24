@@ -26,7 +26,8 @@ class TokenService{
             }
             return jwt.verify(token, secret) as ITokenPayload
         }catch (e) {
-            throw new apiError("Invalid token", StatusCodes.UNAUTHORIZED);
+            console.log(e);
+            throw new apiError("Invalid token from verify tokens", StatusCodes.UNAUTHORIZED);
         }
     }
     public async isTokenExist (token:string, type: "accessToken" | "refreshToken",):Promise<boolean>{

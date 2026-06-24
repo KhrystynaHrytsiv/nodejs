@@ -5,7 +5,7 @@ import { StatusCodes } from "../enums/statusCodes";
 class UserService{
     public async isEmailUniq (email:string):Promise<void>{
        const user = await userRepository.getByEmail(email);
-       if(!user){
+       if(user){
            throw new apiError('user already exist', StatusCodes.BAD_REQUEST)
        }
     }

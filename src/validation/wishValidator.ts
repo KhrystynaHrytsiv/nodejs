@@ -5,10 +5,12 @@ export class WishValidator{
     private static description = joi.string().regex(/^\w+( \w+){0,50}$/);
     private static price = joi.number().min(1);
 
+
     public static create = joi.object({
         title: this.title.required(),
         description: this.description,
-        price: this.price.required()
+        price: this.price.required(),
+        userId: joi.string().required()
     });
     public static update = joi.object({
         title: this.title,

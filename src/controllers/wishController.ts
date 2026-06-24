@@ -21,13 +21,13 @@ class WishController{
             next(e)
         }
     }
-    public async create (req: Request, res: Response, next: NextFunction){
-        try{
+    public async create(req: Request, res: Response, next: NextFunction) {
+        try {
             const body = req.body as IWishUpdate;
             const wish = await wishService.create(body);
-            res.status(StatusCodes.CREATED).json(wish)
-        }catch (e) {
-            next(e)
+            res.status(StatusCodes.CREATED).json(wish);
+        } catch (e) {
+            next(e);
         }
     }
     public async update (req: Request, res: Response, next: NextFunction){

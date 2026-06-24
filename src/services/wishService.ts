@@ -2,7 +2,6 @@ import { wishRepository } from "../repository/wishRepository";
 import { IWish, IWishUpdate } from "../interfaces/IWish";
 import { apiError } from "../error/apiError";
 import { StatusCodes } from "../enums/statusCodes";
-import { userRepository } from "../repository/userRepository";
 
 class WishService{
     public async getAll ():Promise<IWish[]>{
@@ -16,17 +15,17 @@ class WishService{
         return wish
     }
     public async create (wish:IWishUpdate):Promise<IWish>{
-        return await userRepository.createWish(wish)
+        return await wishRepository.create(wish)
     }
     public async update (id:string, wish:IWishUpdate):Promise<IWish | null>{
-        const updateWish = await userRepository.updateWish(id, wish);
+        const updateWish = await wishRepository.update(id, wish);
         if(!updateWish){
             throw new apiError("Wish not found", StatusCodes.NOT_FOUND)
         }
         return updateWish
     }
     public async delete (id:string):Promise<IWish | null>{
-        const wish = await userRepository.deleteWish(id);
+        const wish = await wishRepository.delete(id);
         if(!wish){
             throw new apiError("Wish not found", StatusCodes.NOT_FOUND)
         }
