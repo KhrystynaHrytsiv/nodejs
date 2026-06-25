@@ -1,3 +1,4 @@
+import { templatesConstants } from "../constants/templates";
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
 import { IAuth } from "../interfaces/IAuth";
@@ -5,6 +6,7 @@ import { TokenPair } from "../interfaces/IToken";
 import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { tokenRepository } from "../repositories/tokenRepository";
 import { userRepository } from "../repositories/user.repository";
+import { emailService } from "./emailService";
 import { passwordService } from "./passwordService";
 import { tokenService } from "./tokenService";
 import { userService } from "./userService";
@@ -22,6 +24,12 @@ class AuthService {
             role: newUser.role,
         }); // генерація access та refresh токенів
         await tokenRepository.create({ ...tokens, _userId: newUser._id }); // збереження токенів (або refresh token) у бд
+        await emailService.sendEmail(
+            newUser.email,
+            "welcome",
+            templatesConstants.welcome,
+            { name: newUser.name },
+        );
         return { user: newUser, tokens };
     }
 
