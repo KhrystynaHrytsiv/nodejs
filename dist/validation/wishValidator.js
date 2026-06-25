@@ -12,7 +12,8 @@ class WishValidator {
     static create = joi_1.default.object({
         title: this.title.required(),
         description: this.description,
-        price: this.price.required()
+        price: this.price.required(),
+        userId: joi_1.default.string().required()
     });
     static update = joi_1.default.object({
         title: this.title,
