@@ -73,5 +73,12 @@ class AuthService {
         await tokenRepository.create({ ...tokens, _userId: user._id }); // збереження токенів для користувача в базі даних
         return { user, tokens };
     }
+    public async activate(token: string): Promise<IUser | null> {
+        const { userId } = tokenService.verifyToken(
+            token,
+            ActionTokenType.activate,
+        );
+        return await userService.update(userId, { isActive: true });
+    }
 }
 export const authService = new AuthService();
