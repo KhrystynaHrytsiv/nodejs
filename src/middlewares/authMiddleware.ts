@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { StatusCodes } from "../enums/statusCodes";
+import { TokenTypeEnum } from "../enums/tokenTypeEnum";
 import { apiErrors } from "../errors/apiErrors";
 import { IRefresh, ITokenPayload } from "../interfaces/IToken";
 import { tokenService } from "../services/tokenService";
@@ -29,11 +30,11 @@ class AuthMiddleware {
             }
             const tokenPayload = tokenService.verifyToken(
                 accessToken,
-                "access",
+                TokenTypeEnum.access,
             ); //перевірка коректності  токена
             const isTokenExist = await tokenService.isTokenExist(
                 accessToken,
-                "accessToken",
+                TokenTypeEnum.access,
             ); // чи існує токен в дб
             if (!isTokenExist) {
                 throw new apiErrors("Invalid token", StatusCodes.UNAUTHORIZED);
@@ -69,11 +70,11 @@ class AuthMiddleware {
 
             const tokenPayload = tokenService.verifyToken(
                 refreshToken,
-                "refresh",
+                TokenTypeEnum.refresh,
             );
             const isTokenExist = await tokenService.isTokenExist(
                 refreshToken,
-                "refreshToken",
+                TokenTypeEnum.refresh,
             );
             if (!isTokenExist) {
                 throw new apiErrors("Invalid token", StatusCodes.FORBIDDEN);

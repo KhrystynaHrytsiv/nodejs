@@ -5,6 +5,7 @@ import handlebars from "handlebars";
 import nodemailer, { Transporter } from "nodemailer";
 
 import { config } from "../configs/config";
+import { EmailDataType } from "../constants/emailConstants";
 
 class EmailService {
     private settings: Transporter;
@@ -19,14 +20,13 @@ class EmailService {
     }
     public async sendEmail(
         to: string,
-        subject: string,
-        templateName: string,
+        emailData: EmailDataType,
         context: Record<string, any>,
     ): Promise<void> {
         await this.settings.sendMail({
             to,
-            subject,
-            html: await this._renderTemplate(templateName, context),
+            subject: emailData.subject,
+            html: await this._renderTemplate(emailData.template, context),
         });
     }
     private async _renderTemplate(

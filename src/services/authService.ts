@@ -1,4 +1,7 @@
-import { templates } from "../constants/templates";
+import { config } from "../configs/config";
+import { emailConstants } from "../constants/emailConstants";
+import { ActionTokenType } from "../enums/actionTokenType";
+import { EmailEnum } from "../enums/emailEnum";
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
 import { IAuth } from "../interfaces/IAuth";
@@ -24,11 +27,17 @@ class AuthService {
             role: newUser.role,
         }); // генерація access та refresh токенів
         await tokenRepository.create({ ...tokens, _userId: newUser._id }); // збереження токенів (або refresh token) у бд
+        const activeToken = tokenService.generateActionToken(
+            { userId: newUser._id, role: newUser.role },
+            ActionTokenType.activate,
+        );
         await emailService.sendEmail(
             newUser.email,
-            "Welcome",
-            templates.forPupsic,
-            { name: newUser.name },
+            emailConstants[EmailEnum.activate],
+            {
+                name: newUser.name,
+                url: `${config.FRONTEND_URL}/activate/${activeToken}`,
+            },
         );
         return { user: newUser, tokens };
     }
