@@ -27,7 +27,7 @@ router.post(
     commonMiddleware.validateBody(RecoveryValidator.emailValidation),
     authController.recoveryRequest,
 );
-router.patch(
+router.post(
     "/recovery/:token",
     commonMiddleware.validateBody(AuthValidator.passwordValidate),
     authController.recoverPassword,
