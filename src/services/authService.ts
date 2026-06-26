@@ -80,5 +80,34 @@ class AuthService {
         );
         return await userService.update(userId, { isActive: true });
     }
+    public async recoveryRequest(user: IUser): Promise<void> {
+        const token = tokenService.generateActionToken(
+            {
+                userId: user._id,
+                role: user.role,
+            },
+            ActionTokenType.recovery,
+        );
+        const url = `${config.FRONTEND_URL}/recovery/${token}`;
+        await emailService.sendEmail(
+            user.email,
+            emailConstants[EmailEnum.recovery],
+            { url },
+        );
+    }
+    public async recoveryPassword(
+        token: string,
+        password: string,
+    ): Promise<IUser | null> {
+        const { userId } = tokenService.verifyToken(
+            token,
+            ActionTokenType.recovery,
+        );
+        const hashedPassword = await passwordService.hashPassword(password);
+        const user = await userService.update(userId, {
+            password: hashedPassword,
+        });
+        return user;
+    }
 }
 export const authService = new AuthService();

@@ -43,6 +43,14 @@ class UserService {
             );
         }
     }
+    public async getByEmail(email: string): Promise<IUser | null> {
+        const user = userRepository.getByEmail(email);
+        if (!user) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
+        }
+        return await user;
+    }
+
     public async isActive(id: string): Promise<boolean> {
         const user = await this.getById(id);
         return user.isActive;

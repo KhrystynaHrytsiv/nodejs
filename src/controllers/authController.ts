@@ -60,5 +60,35 @@ class AuthController {
             next(e);
         }
     }
+    public async recoveryRequest(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) {
+        try {
+            const { email } = req.body;
+            const user = await userService.getByEmail(email);
+            if (user) {
+                await authService.recoveryRequest(user);
+            }
+            res.status(StatusCodes.OK).json({ details: "Check your email" });
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async recoverPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) {
+        try {
+            const { token } = req.params as { token: string };
+            const { password } = req.body;
+            const user = await authService.recoveryPassword(token, password);
+            res.status(StatusCodes.OK).json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 export const authController = new AuthController();
