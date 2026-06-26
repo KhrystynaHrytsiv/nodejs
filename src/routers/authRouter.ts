@@ -20,5 +20,16 @@ router.post(
     authController.refresh,
 );
 router.get("/me", authMiddleware.checkAccessToken, authController.me);
+router.post("/activate/:token", authController.activate);
+router.post(
+    "/recovery",
+    commonMiddleware.validateBody(AuthValidator.emailValidate),
+    authController.recoveryRequest,
+);
+router.post(
+    "/recovery/:token",
+    commonMiddleware.validateBody(AuthValidator.passwordValidate),
+    authController.recoveryPassword,
+);
 
 export const authRouter = router;

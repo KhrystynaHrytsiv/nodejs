@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { TokenType } from "../enums/actionTokenType";
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
 import { IRefresh, ITokenPayload } from "../interfaces/IToken";
@@ -29,7 +30,7 @@ class AuthMiddleware {
             }
             const tokenPayload = tokenService.verifyToken(
                 accessToken,
-                "access",
+                TokenType.access,
             ); //перевірка коректності  токена
             const isTokenExist = await tokenService.isTokenExist(
                 accessToken,
@@ -69,7 +70,7 @@ class AuthMiddleware {
 
             const tokenPayload = tokenService.verifyToken(
                 refreshToken,
-                "refresh",
+                TokenType.refresh,
             );
             const isTokenExist = await tokenService.isTokenExist(
                 refreshToken,

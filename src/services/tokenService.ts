@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { config } from "../configs/config";
+import { ActionTokenType, TokenType } from "../enums/actionTokenType";
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
 import { ITokenPayload, TokenPair } from "../interfaces/IToken";
@@ -18,16 +19,22 @@ class TokenService {
     }
     public verifyToken(
         token: string,
-        type: "access" | "refresh",
+        type: TokenType | ActionTokenType,
     ): ITokenPayload {
         try {
             let secret: string;
             switch (type) {
-                case "access":
+                case TokenType.access:
                     secret = config.JWT_ACCESS_SECRET;
                     break;
-                case "refresh":
+                case TokenType.refresh:
                     secret = config.JWT_REFRESH_SECRET;
+                    break;
+                case ActionTokenType.activate:
+                    secret = config.JWT_ACTIVATE_SECRET;
+                    break;
+                case ActionTokenType.recovery:
+                    secret = config.JWT_RECOVERY_SECRET;
                     break;
                 default:
                     throw new apiErrors(
@@ -47,6 +54,30 @@ class TokenService {
     ): Promise<boolean> {
         const iToken = await tokenRepository.findByParams({ [type]: token });
         return !!iToken;
+    }
+
+    public generateActionToken(
+        payload: ITokenPayload,
+        type: ActionTokenType,
+    ): string {
+        let secret: string;
+        let expiresIn: any;
+        switch (type) {
+            case ActionTokenType.activate:
+                secret = config.JWT_ACTIVATE_SECRET;
+                expiresIn = config.JWT_ACTIVATE_LIFETIME;
+                break;
+            case ActionTokenType.recovery:
+                secret = config.JWT_RECOVERY_SECRET;
+                expiresIn = config.JWT_RECOVERY_LIFETIME;
+                break;
+            default:
+                throw new apiErrors(
+                    "invalid token action type",
+                    StatusCodes.BAD_REQUEST,
+                );
+        }
+        return jwt.sign(payload, secret, { expiresIn });
     }
 }
 export const tokenService = new TokenService();

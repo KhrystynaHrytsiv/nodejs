@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
+import { emailConstant } from "../constants/templates";
+import { EmailEnum } from "../enums/emailEnum";
 import { StatusCodes } from "../enums/statusCodes";
 import { IAuth } from "../interfaces/IAuth";
 import { ITokenPayload } from "../interfaces/IToken";
 import { IUserCreateDTO } from "../interfaces/IUser";
 import { tokenRepository } from "../repositories/tokenRepository";
 import { authService } from "../services/authService";
+import { emailService } from "../services/emailService";
 import { tokenService } from "../services/tokenService";
 import { userService } from "../services/userService";
 
@@ -47,6 +50,52 @@ class AuthController {
                 _userId: userId,
             });
             res.status(StatusCodes.OK).json(tokens);
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async activate(req: Request, res: Response, next: NextFunction) {
+        try {
+            const token = req.params.token as string;
+            const user = await authService.activate(token);
+            res.status(StatusCodes.OK).json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async recoveryRequest(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) {
+        try {
+            const { email } = req.body;
+            const user = await userService.getByEmail(email);
+            if (user) {
+                await authService.recoveryRequest(user);
+            }
+            res.status(StatusCodes.OK).json({ details: "Check your email" });
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async recoveryPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) {
+        try {
+            const { token } = req.params as { token: string };
+            const { password } = req.body;
+            const user = await authService.recoveryPassword(token, password);
+            if (user) {
+                await emailService.sendEmail(
+                    user.email,
+                    emailConstant[EmailEnum.successful],
+                    { name: user.name },
+                );
+            }
+            res.status(StatusCodes.OK).json(user);
         } catch (e) {
             next(e);
         }

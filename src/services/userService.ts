@@ -1,6 +1,6 @@
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
-import { IUser, IUserCreateDTO, IUserUpdateDTO } from "../interfaces/IUser";
+import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { userRepository } from "../repositories/user.repository";
 
 class UserService {
@@ -19,7 +19,7 @@ class UserService {
     }
     public async update(
         id: string,
-        user: IUserUpdateDTO,
+        user: Partial<IUser>,
     ): Promise<IUser | null> {
         const data = await userRepository.getById(id);
         if (!data) {
@@ -42,6 +42,13 @@ class UserService {
                 StatusCodes.BAD_REQUEST,
             );
         }
+    }
+    public async getByEmail(email: string): Promise<IUser | null> {
+        const user = await userRepository.getByEmail(email);
+        if (!user) {
+            throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
+        }
+        return user;
     }
     public async isActive(id: string): Promise<boolean> {
         const user = await this.getById(id);
