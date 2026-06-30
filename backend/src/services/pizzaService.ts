@@ -5,7 +5,7 @@ class PizzaService {
     public getAll(): Promise<IPizza[]> {
         return pizzaRepository.getAll();
     }
-    public create(pizza: IPizza): Promise<IPizza> {
+    public create(pizza: Partial<IPizza>): Promise<IPizza> {
         return pizzaRepository.create(pizza);
     }
 }

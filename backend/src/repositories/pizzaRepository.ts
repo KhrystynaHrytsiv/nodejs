@@ -5,7 +5,7 @@ class PizzaRepository {
     public getAll(): Promise<IPizza[]> {
         return Pizza.find();
     }
-    public create(pizza: IPizza): Promise<IPizza> {
+    public create(pizza: Partial<IPizza>): Promise<IPizza> {
         return Pizza.create(pizza);
     }
 }
