@@ -1,0 +1,13 @@
+.container{
+    height: 50px;
+    background-color: lavender;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+.container a{
+    text-decoration: none;
+    color: #494747;
+    font-size: 25px;
+    padding: 0 30px;
+}

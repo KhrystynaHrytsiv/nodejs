@@ -46,7 +46,7 @@ class AuthController {
                 ...tokens,
                 _userId: userId,
             });
-            res.status(StatusCodes.OK).json(tokens);
+            res.status(StatusCodes.OK).json({ tokens });
         } catch (e) {
             next(e);
         }
