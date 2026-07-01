@@ -2,3 +2,5 @@
 node_modules
 dist
 /.mongo_db
+# frontend build
+client/static/

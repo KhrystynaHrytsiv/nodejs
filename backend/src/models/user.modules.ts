@@ -21,13 +21,13 @@ const userSchema = new Schema(
         avatar: { type: String, default: "" },
         isDeleted: { type: Boolean, default: false },
         isVerified: { type: Boolean, default: false },
-        isActive: { type: Boolean, default: false },
+        isActive: { type: Boolean, default: true },
     },
     {
         timestamps: true,
         versionKey: false,
         toJSON: {
-            transform: (doc, ret) => {
+            transform: (doc: any, ret: any) => {
                 delete (ret as any).password;
                 if (ret.avatar) {
                     ret.avatar = `/media/${path.basename(ret.avatar)}`;

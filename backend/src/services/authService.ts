@@ -27,18 +27,18 @@ class AuthService {
             role: newUser.role,
         }); // генерація access та refresh токенів
         await tokenRepository.create({ ...tokens, _userId: newUser._id }); // збереження токенів (або refresh token) у бд
-        const activeToken = tokenService.generateActionToken(
-            { userId: newUser._id, role: newUser.role },
-            ActionTokenType.activate,
-        );
-        await emailService.sendEmail(
-            newUser.email,
-            emailConstants[EmailEnum.activate],
-            {
-                name: newUser.name,
-                url: `${config.FRONTEND_URL}/activate/${activeToken}`,
-            },
-        );
+        // const activeToken = tokenService.generateActionToken(
+        //     { userId: newUser._id, role: newUser.role },
+        //     ActionTokenType.activate,
+        // );
+        // await emailService.sendEmail(
+        //     newUser.email,
+        //     emailConstants[EmailEnum.activate],
+        //     {
+        //         name: newUser.name,
+        //         url: `${config.FRONTEND_URL}/activate/${activeToken}`,
+        //     },
+        // );
         return { user: newUser, tokens };
     }
 
