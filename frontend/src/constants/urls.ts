@@ -4,7 +4,7 @@ export const urls = {
     pizza,
     auth:{
         login: `${auth}/signIn`,
-        register: `${auth}/singUp`,
+        register: `${auth}/signUp`,
         refresh: `${auth}/refresh`,
         me: `${auth}/me`
     }

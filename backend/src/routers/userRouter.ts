@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { upload } from "../configs/multer.config";
 import { userController } from "../controllers/userController";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { commonMiddleware } from "../middlewares/commonMiddlewar";
@@ -33,5 +34,12 @@ router.patch(
     authMiddleware.checkAccessToken,
     authMiddleware.isAdmin,
     userController.unBlockUser,
+);
+
+router.patch(
+    "/uploadAvatar/:id",
+    commonMiddleware.isIdValidate("id"),
+    upload.single("avatar"),
+    userController.uploadAvatar,
 );
 export const userRouter = router;
