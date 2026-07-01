@@ -2,3 +2,5 @@
 node_modules
 dist
 .env
+# frontend build
+client/static/
