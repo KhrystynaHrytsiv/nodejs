@@ -64,6 +64,7 @@ class UserService {
     }
     public async unBlockUser(id: string): Promise<IUser> {
         const user = await userRepository.unBlockUser(id);
+
         if (!user) {
             throw new apiErrors("User not found", StatusCodes.NOT_FOUND);
         }

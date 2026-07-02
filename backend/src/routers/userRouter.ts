@@ -38,8 +38,9 @@ router.patch(
 
 router.patch(
     "/uploadAvatar/:id",
-    commonMiddleware.isIdValidate("id"),
+    authMiddleware.checkAccessToken,
     upload.single("avatar"),
+    commonMiddleware.isFileExists(),
     userController.uploadAvatar,
 );
 export const userRouter = router;
