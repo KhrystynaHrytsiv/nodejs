@@ -1,9 +1,20 @@
-import { IUser, IUserCreateDTO } from "../interfaces/IUser";
+import { QueryFilter } from "mongoose";
+
+import { IUser, IUserCreateDTO, IUserQuery } from "../interfaces/IUser";
 import { User } from "../models/user.modules";
 
 class UserRepository {
-    public getAll(): Promise<IUser[]> {
-        return User.find();
+    public getAll(query: IUserQuery): Promise<IUser[]> {
+        const skip = Number(query.pageSize * query.page - 1);
+        const filterObject: QueryFilter<IUser> = { isDelete: false };
+        if (query.search) {
+            filterObject.$or = [
+                { name: { $regex: query.search, $options: "i" } },
+                { surname: { $regex: query.search, $options: "i" } },
+            ];
+        }
+
+        return User.find(filterObject).limit(query.pageSize).skip(skip);
     }
 
     public create(user: IUserCreateDTO): Promise<IUser> {

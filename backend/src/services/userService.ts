@@ -1,11 +1,21 @@
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
-import { IUser, IUserCreateDTO } from "../interfaces/IUser";
+import { IResPagination } from "../interfaces/IResPagination";
+import { IUser, IUserCreateDTO, IUserQuery } from "../interfaces/IUser";
 import { userRepository } from "../repositories/user.repository";
 
 class UserService {
-    public getAll(): Promise<IUser[]> {
-        return userRepository.getAll();
+    public async getAll(query: IUserQuery): Promise<IResPagination<IUser>> {
+        const data = await userRepository.getAll(query);
+        const totalItems = data.length;
+        const totalPages = Math.ceil(totalItems / query.pageSize);
+        return {
+            totalItems: totalItems,
+            totalPages,
+            prevPage: !!(query.page - 1),
+            nextPage: query.page < totalPages,
+            data,
+        };
     }
     public create(user: IUserCreateDTO): Promise<IUser> {
         return userRepository.create(user);
