@@ -1,11 +1,12 @@
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
+import { IQuery } from "../interfaces/IQuery";
 import { IResPagination } from "../interfaces/IResPagination";
-import { IUser, IUserCreateDTO, IUserQuery } from "../interfaces/IUser";
+import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { userRepository } from "../repositories/user.repository";
 
 class UserService {
-    public async getAll(query: IUserQuery): Promise<IResPagination<IUser>> {
+    public async getAll(query: IQuery): Promise<IResPagination<IUser>> {
         const [data, totalItems] = await userRepository.getAll(query);
         const totalPages = Math.ceil(totalItems / query.pageSize);
         return {

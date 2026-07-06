@@ -2,14 +2,15 @@ import { NextFunction, Request, Response } from "express";
 
 import { StatusCodes } from "../enums/statusCodes";
 import { apiErrors } from "../errors/apiErrors";
+import { IQuery } from "../interfaces/IQuery";
 import { ITokenPayload } from "../interfaces/IToken";
-import { IUserQuery, IUserUpdateDTO } from "../interfaces/IUser";
+import { IUserUpdateDTO } from "../interfaces/IUser";
 import { userService } from "../services/userService";
 
 class UserController {
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const query = req.query as any as IUserQuery;
+            const query = req.query as any as IQuery;
             const data = await userService.getAll(query);
             res.status(StatusCodes.OK).json(data);
             next();

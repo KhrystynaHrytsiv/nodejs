@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
 import { StatusCodes } from "../enums/statusCodes";
+import { IPizzaQuery } from "../interfaces/IQuery";
 import { pizzaService } from "../services/pizzaService";
 
 class PizzaController {
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const pizzas = await pizzaService.getAll();
+            const query = req.query as any as IPizzaQuery;
+            const pizzas = await pizzaService.getAll(query);
             res.status(StatusCodes.OK).json(pizzas);
         } catch (e) {
             next(e);

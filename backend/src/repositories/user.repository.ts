@@ -1,10 +1,11 @@
 import { QueryFilter } from "mongoose";
 
-import { IUser, IUserCreateDTO, IUserQuery } from "../interfaces/IUser";
+import { IQuery } from "../interfaces/IQuery";
+import { IUser, IUserCreateDTO } from "../interfaces/IUser";
 import { User } from "../models/user.modules";
 
 class UserRepository {
-    public getAll(query: IUserQuery): Promise<[IUser[], number]> {
+    public getAll(query: IQuery): Promise<[IUser[], number]> {
         const skip = query.pageSize * (query.page - 1);
         const filterObject: QueryFilter<IUser> = { isDeleted: false };
         if (query.search) {
@@ -13,17 +14,11 @@ class UserRepository {
                 { surname: { $regex: query.search, $options: "i" } },
             ];
         }
-
-        const orderObject: Record<string, 1 | -1> = {};
-        if (query.order) {
-            if (query.order.startsWith("-")) {
-                orderObject[query.order.slice(1)] = -1;
-            } else {
-                orderObject[query.order] = 1;
-            }
-        }
         return Promise.all([
-            User.find(filterObject).limit(query.pageSize).skip(skip),
+            User.find(filterObject)
+                .limit(query.pageSize)
+                .skip(skip)
+                .sort(query.order),
             User.find(filterObject).countDocuments(),
         ]);
     }
