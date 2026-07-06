@@ -13,7 +13,6 @@ class UserController {
             const query = req.query as any as IQuery;
             const data = await userService.getAll(query);
             res.status(StatusCodes.OK).json(data);
-            next();
         } catch (e) {
             next(e);
         }
