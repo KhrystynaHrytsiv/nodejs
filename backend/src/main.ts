@@ -7,6 +7,7 @@ import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
 import { config } from "./configs/config";
+import { swaggerDocument, swaggerUI } from "./configs/swaggerConfig";
 import { cronRunner } from "./crons";
 import { apiErrors } from "./errors/apiErrors";
 import { apiRouter } from "./routers/apiRouter";
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: ["http://localhost:3000"] }));
 
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/", apiRouter);
 app.use("/media", express.static(path.join(process.cwd(), "uploads")));
 
