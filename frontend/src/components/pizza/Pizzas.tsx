@@ -11,7 +11,7 @@ const Pizzas = () => {
     }, [trigger, dispatch]);
     return (
         <div>
-            {pizzas.map(pizza => <Pizza key={pizza.id} pizza={pizza}/>)}
+            {pizzas && pizzas.map(pizza => <Pizza key={pizza.id} pizza={pizza}/>)}
         </div>
     );
 };

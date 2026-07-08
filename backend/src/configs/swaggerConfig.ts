@@ -269,7 +269,7 @@ const swaggerDocument: OpenAPIV3.Document = {
         },
         "/pizzas": {
             get: {
-                tags: ["Pizzas"],
+                tags: ["Pizza"],
                 summary: "Get all pizzas with pagination and filters",
                 security: [{ bearerAuth: [] }],
                 parameters: [
@@ -341,8 +341,6 @@ const swaggerDocument: OpenAPIV3.Document = {
                     },
                 },
             },
-        },
-        "/pizzas": {
             post: {
                 tags: ["Pizza"],
                 summary: "Creating new pizza",
@@ -400,6 +398,78 @@ const swaggerDocument: OpenAPIV3.Document = {
                 },
             },
         },
+        "/users": {
+            get: {
+                tags: ["Users"],
+                summary: "Getting all authorized users with pagination",
+                responses: {
+                    "200": {
+                        description:
+                            "Successfully get all users with pagination",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        totalItems: { type: "integer" },
+                                        totalPages: { type: "integer" },
+                                        prevPage: { type: "boolean" },
+                                        nextPage: { type: "boolean" },
+                                        data: {
+                                            type: "array",
+                                            items: {
+                                                type: "object",
+                                                properties: {
+                                                    email: { type: "string" },
+                                                    role: { type: "string" },
+                                                    name: { type: "string" },
+                                                    surname: { type: "string" },
+                                                    age: { type: "integer" },
+                                                    avatar: { type: "string" },
+                                                    isActive: {
+                                                        type: "boolean",
+                                                    },
+                                                    isDeleted: {
+                                                        type: "boolean",
+                                                    },
+                                                    isVerified: {
+                                                        type: "boolean",
+                                                    },
+                                                    _id: { type: "string" },
+                                                    createdAt: {
+                                                        type: "string",
+                                                    },
+                                                    updatedAt: {
+                                                        type: "string",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "400": {
+                        description: "Bad request",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        status: {
+                                            type: "integer",
+                                            default: 400,
+                                        },
+                                        message: { type: "string" },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
         "/users/{userId}": {
             get: {
                 tags: ["Users"],
@@ -438,6 +508,81 @@ const swaggerDocument: OpenAPIV3.Document = {
                                 },
                             },
                         },
+                    },
+                },
+            },
+            put: {
+                tags: ["Users"],
+                summary: "Update user info by user id",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "userId",
+                        in: "path",
+                        description: "User id",
+                        required: true,
+                        schema: { type: "string" },
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    name: { type: "string" },
+                                    surname: { type: "string" },
+                                    age: { type: "integer" },
+                                },
+                                required: ["name", "surname", "age"],
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "200": {
+                        description: "Successfully updated user data",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        email: { type: "string" },
+                                        role: { type: "string" },
+                                        name: { type: "string" },
+                                        surname: { type: "string" },
+                                        age: { type: "integer" },
+                                        avatar: { type: "string" },
+                                        isActive: { type: "boolean" },
+                                        isDeleted: { type: "boolean" },
+                                        isVerified: { type: "boolean" },
+                                        _id: { type: "string" },
+                                        createdAt: { type: "string" },
+                                        updatedAt: { type: "string" },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            delete: {
+                tags: ["Users"],
+                summary: "Delete user by user id",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "userId",
+                        in: "path",
+                        description: "User id",
+                        required: true,
+                        schema: { type: "string" },
+                    },
+                ],
+                responses: {
+                    "204": {
+                        description: "No content",
                     },
                 },
             },
